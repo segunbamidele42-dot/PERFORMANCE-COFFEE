@@ -83,7 +83,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     try {
-      const response = await fetch("https://formspree.io/f/meaqkdnr", {
+      const response = await fetch("https://formspree.io/f/meaqkdnr/submit", {
         method: "POST",
         headers: { "Content-Type": "application/json", Accept: "application/json" },
         body: JSON.stringify({
@@ -148,7 +148,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     const blob = new Blob([payload], { type: "application/json" });
-    const sent = navigator.sendBeacon("https://formspree.io/f/meaqkdnr", blob);
+    const sent = navigator.sendBeacon("https://formspree.io/f/meaqkdnr/submit", blob);
     if (sent) abandonedSent = true;
   }
 
