@@ -2,7 +2,7 @@
 // Performax Coffee — Shared Funnel Script
 // ============================================
 
-const WEB3FORMS_ACCESS_KEY = "cafa519c-8f9f-44ea-b344-64e87f72bd61";
+const FORMSPREE_ENDPOINT = "https://formspree.io/f/meaqkdnr";
 
 // FAQ accordion
 document.addEventListener("DOMContentLoaded", () => {
@@ -63,7 +63,7 @@ document.addEventListener("DOMContentLoaded", () => {
     };
   }
 
-  // --- normal submit: send to Web3Forms, then go to thank-you page ---
+  // --- normal submit: send to Formspree, then go to thank-you page ---
   let hasSubmitted = false;
 
   form.addEventListener("submit", async (e) => {
@@ -83,12 +83,11 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     try {
-      const response = await fetch("https://formspree.io/f/meaqkdnr/submit", {
+      const response = await fetch(FORMSPREE_ENDPOINT, {
         method: "POST",
         headers: { "Content-Type": "application/json", Accept: "application/json" },
         body: JSON.stringify({
-          access_key: WEB3FORMS_ACCESS_KEY,
-          subject: "New Performax Coffee Order",
+          _subject: "New Performax Coffee Order",
           status: "SUBMITTED",
           name: v.name,
           phone: v.phone,
@@ -105,11 +104,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const result = await response.json();
 
-      if (result.success) {
+      if (response.ok) {
         hasSubmitted = true;
         window.location.href = "thank-you.html";
       } else {
-        throw new Error(result.message || "Submission failed");
+        throw new Error(result.error || "Submission failed");
       }
     } catch (err) {
       console.error("Order submission failed:", err);
@@ -132,8 +131,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!(v.name && v.phone && v.address && v.state)) return; // not enough info yet
 
     const payload = JSON.stringify({
-      access_key: WEB3FORMS_ACCESS_KEY,
-      subject: "Abandoned Cart - Performax Coffee",
+      _subject: "Abandoned Cart - Performax Coffee",
       status: "ABANDONED CART (left without submitting)",
       name: v.name,
       phone: v.phone,
@@ -148,7 +146,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     const blob = new Blob([payload], { type: "application/json" });
-    const sent = navigator.sendBeacon("https://formspree.io/f/meaqkdnr/submit", blob);
+    const sent = navigator.sendBeacon(FORMSPREE_ENDPOINT, blob);
     if (sent) abandonedSent = true;
   }
 
