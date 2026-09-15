@@ -874,8 +874,7 @@
         <h2 class="center">Fill Out This Form and Get Your Pack(s) Delivered to Your Doorstep Within 48 Hours for Free</h2>
         <div class="form-card">
             <form id="order-form">
-                <input type="hidden" name="access_key" value="cafa519c-8f9f-44ea-b344-64e87f72bd61">
-                <input type="hidden" name="subject" value="New Performax Coffee Order">
+                <input type="hidden" name="_subject" value="New Performax Coffee Order">
                 <div class="field">
                     <label for="name">Full Name</label>
                     <input type="text" id="name" name="name" required />
@@ -1103,9 +1102,13 @@
             });
         });
 
+        // Formspree endpoint used for both the order submission and the
+        // cart-abandonment ping below
+        var FORMSPREE_ENDPOINT = 'https://formspree.io/f/meaqkdnr';
+
         // Cart abandonment tracking: if Name, Phone, State and Address are all
         // filled in but the visitor leaves without submitting, send what they
-        // entered to Web3Forms as a separate "Cart Abandonment" lead
+        // entered to Formspree as a separate "Cart Abandonment" lead
         var orderForm = document.getElementById('order-form');
         var formSubmitted = false;
         var abandonmentSent = false;
@@ -1122,8 +1125,7 @@
             if (!name || !phone || !address || !state) return;
 
             var abandonData = new FormData();
-            abandonData.append('access_key', 'cafa519c-8f9f-44ea-b344-64e87f72bd61');
-            abandonData.append('subject', 'Cart Abandonment - Performax Coffee');
+            abandonData.append('_subject', 'Cart Abandonment - Performax Coffee');
             abandonData.append('name', name);
             abandonData.append('phone', phone);
             abandonData.append('address', address);
@@ -1132,9 +1134,9 @@
             // sendBeacon fires reliably even as the page is closing/unloading,
             // unlike a normal fetch which can get cancelled mid-flight
             if (navigator.sendBeacon) {
-                navigator.sendBeacon('https://api.web3forms.com/submit', abandonData);
+                navigator.sendBeacon(FORMSPREE_ENDPOINT, abandonData);
             } else {
-                fetch('https://api.web3forms.com/submit', { method: 'POST', body: abandonData, keepalive: true });
+                fetch(FORMSPREE_ENDPOINT, { method: 'POST', body: abandonData, keepalive: true });
             }
             abandonmentSent = true;
         }
@@ -1144,7 +1146,7 @@
             if (document.visibilityState === 'hidden') maybeSendAbandonedCart();
         });
 
-        // After the order form is submitted: validate, send to Web3Forms, then redirect
+        // After the order form is submitted: validate, send to Formspree, then redirect
         orderForm.addEventListener('submit', function (e) {
             e.preventDefault();
 
@@ -1169,20 +1171,19 @@
 
             var formData = new FormData(orderForm);
 
-            fetch('https://api.web3forms.com/submit', {
+            fetch(FORMSPREE_ENDPOINT, {
                 method: 'POST',
                 headers: { 'Accept': 'application/json' },
                 body: formData
             })
-            .then(function (response) { return response.json(); })
-            .then(function (result) {
-                if (result.success) {
+            .then(function (response) {
+                if (response.ok) {
                     formSubmitted = true;
                     window.location.href = 'thank-you.html';
                 } else {
-                    submitBtn.disabled = false;
-                    submitBtn.textContent = originalText;
-                    alert('Something went wrong sending your order. Please try again.');
+                    return response.json().then(function (result) {
+                        throw new Error((result && result.error) || 'Submission failed');
+                    });
                 }
             })
             .catch(function () {
