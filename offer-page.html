@@ -1,0 +1,1197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Performance Solution</title>
+    <style>
+        /* ==========================================================
+           BASE / RESET
+           ========================================================== */
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #ffffff;
+            color: #1a1a1a;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        img { max-width: 100%; }
+
+        /* ==========================================================
+           HERO SECTION (unchanged from your original)
+           ========================================================== */
+        .content-container {
+            flex: 1;
+            padding: 40px 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .headline {
+            font-size: 28px;
+            font-weight: bold;
+            line-height: 1.3;
+            color: #000000;
+            margin-bottom: 20px;
+        }
+
+        .highlight-red {
+            color: #cc0000;
+            text-decoration: underline;
+        }
+
+        .offer-text {
+            font-size: 20px;
+            font-weight: bold;
+            color: #000000;
+            line-height: 1.4;
+            margin-bottom: 30px;
+        }
+
+        .image-placeholder {
+            width: 100%;
+            max-width: 320px;
+            border-radius: 10px;
+            display: block;
+            margin: 0 auto 35px auto;
+        }
+
+        .sub-headline {
+            font-size: 30px;
+            font-weight: bold;
+            color: #000000;
+            line-height: 1.3;
+            margin-bottom: 15px;
+        }
+
+        .secondary-image {
+            width: 100%;
+            max-width: 320px;
+            border-radius: 10px;
+            display: block;
+            margin: 0 auto 35px auto;
+        }
+
+        .video-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+            aspect-ratio: 1 / 1;
+            margin: 0 auto 35px auto;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .video-wrapper iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .big-red-heading {
+            font-size: 30px;
+            font-weight: bold;
+            color: #cc0000;
+            line-height: 1.3;
+            margin-bottom: 20px;
+        }
+
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            max-width: 340px;
+            margin: 0 auto;
+        }
+
+        .btn {
+            display: block;
+            text-align: center;
+            padding: 14px 24px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 25px;
+            transition: opacity 0.2s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn:hover { opacity: 0.9; }
+
+        .btn-red { background-color: #990000; }
+        .btn-black { background-color: #000000; }
+
+        /* ==========================================================
+           SHARED SECTION LAYOUT (for everything below the hero)
+           ========================================================== */
+        .wrap {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .section {
+            padding: 50px 0;
+            border-top: 1px solid #eeeeee;
+        }
+
+        .center { text-align: center; }
+
+        .section h2 {
+            font-size: 26px;
+            font-weight: bold;
+            color: #000000;
+            line-height: 1.3;
+            margin-bottom: 20px;
+        }
+
+        .section h3 {
+            font-size: 19px;
+            font-weight: bold;
+            color: #000000;
+            margin-bottom: 12px;
+        }
+
+        .section p {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #333333;
+            margin-bottom: 16px;
+        }
+
+        .eyebrow {
+            color: #990000;
+            font-weight: bold;
+            font-size: 13px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .lede {
+            font-size: 20px;
+            margin-bottom: 16px;
+        }
+
+        /* Highlighted callout box */
+        .panel {
+            background-color: #f7f7f7;
+            border-left: 4px solid #990000;
+            border-radius: 8px;
+            padding: 20px 22px;
+            margin-bottom: 20px;
+        }
+
+        .panel p { margin: 0; }
+
+        /* Two-column image + text blocks */
+        .two-col {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .two-col img {
+            flex: 1 1 280px;
+            border-radius: 10px;
+            display: block;
+        }
+
+        .two-col > div {
+            flex: 1 1 320px;
+        }
+
+        /* Feature rows with a checkmark icon */
+        .feature-row {
+            display: flex;
+            gap: 14px;
+            align-items: flex-start;
+            margin-bottom: 18px;
+        }
+
+        .feature-row__icon {
+            flex: 0 0 28px;
+            height: 28px;
+            border-radius: 50%;
+            background-color: #cc0000;
+            color: #ffffff;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .feature-row p.mb-0 {
+            margin: 4px 0 0 0;
+            font-size: 15px;
+        }
+
+        /* Stat counters */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 20px;
+            text-align: center;
+            margin: 35px 0;
+        }
+
+        .stats__num {
+            font-size: 26px;
+            font-weight: bold;
+            color: #990000;
+        }
+
+        .stats__label {
+            font-size: 13px;
+            color: #666666;
+        }
+
+        /* Video embed used further down the page */
+        .video-wrap {
+            position: relative;
+            width: 100%;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 25px 0;
+        }
+
+        .video-wrap--square {
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+            aspect-ratio: 1 / 1;
+        }
+
+        .video-wrap iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* ==========================================================
+           TESTIMONIAL CARD
+           ========================================================== */
+        .testimonial-card {
+            max-width: 380px;
+            margin: 0 auto 25px auto;
+            border: 1px solid #e2e2e2;
+            border-radius: 14px;
+            overflow: hidden;
+            background-color: #ffffff;
+        }
+
+        .testimonial-card__image {
+            width: 100%;
+            aspect-ratio: 3 / 4;
+            object-fit: cover;
+            display: block;
+        }
+
+        .testimonial-card__body {
+            padding: 22px 20px;
+        }
+
+        .testimonial-card__body p {
+            font-size: 16px;
+            font-weight: bold;
+            line-height: 1.5;
+            color: #000000;
+            margin-bottom: 18px;
+        }
+
+        .testimonial-card__stars {
+            color: #f5a623;
+            font-size: 20px;
+            text-align: center;
+            margin-bottom: 8px;
+        }
+
+        .testimonial-card__name {
+            text-align: center;
+            font-weight: bold;
+            color: #1a73e8;
+            font-size: 15px;
+        }
+
+        /* ==========================================================
+           PRICING
+           ========================================================== */
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-top: 25px;
+        }
+
+        .price-card {
+            border: 1px solid #e2e2e2;
+            border-radius: 12px;
+            padding: 22px;
+            text-align: center;
+            position: relative;
+        }
+
+        .price-card--featured {
+            border: 2px solid #990000;
+            box-shadow: 0 6px 18px rgba(153, 0, 0, 0.12);
+        }
+
+        .price-card__badge {
+            display: inline-block;
+            background-color: #000000;
+            color: #ffffff;
+            font-size: 11px;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+            padding: 4px 10px;
+            border-radius: 12px;
+            margin-bottom: 12px;
+        }
+
+        .price-card--featured .price-card__badge {
+            background-color: #990000;
+        }
+
+        .price-card__desc {
+            font-size: 15px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .price-card__old {
+            font-size: 14px;
+            color: #999999;
+            text-decoration: line-through;
+        }
+
+        .price-card__now {
+            font-size: 24px;
+            font-weight: bold;
+            color: #990000;
+            margin-bottom: 12px;
+        }
+
+        .price-card img {
+            border-radius: 8px;
+            margin-bottom: 14px;
+        }
+
+        .price-card ul {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 18px 0;
+            text-align: left;
+            font-size: 14px;
+            color: #444444;
+        }
+
+        .price-card ul li {
+            padding: 5px 0 5px 22px;
+            position: relative;
+        }
+
+        .price-card ul li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #990000;
+            font-weight: bold;
+        }
+
+        .btn--block {
+            display: block;
+            width: 100%;
+        }
+
+        /* ==========================================================
+           ORDER FORM
+           ========================================================== */
+        .form-card {
+            background-color: #f7f7f7;
+            border-radius: 12px;
+            padding: 30px;
+        }
+
+        .field {
+            margin-bottom: 18px;
+        }
+
+        .field label {
+            display: block;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 6px;
+        }
+
+        .field input[type="text"],
+        .field input[type="tel"],
+        .field input[type="email"],
+        .field input[type="date"],
+        .field textarea,
+        .field select {
+            width: 100%;
+            padding: 12px 14px;
+            font-size: 15px;
+            border: 1px solid #cccccc;
+            border-radius: 8px;
+            font-family: inherit;
+            background-color: #ffffff;
+        }
+
+        .field textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        .radio-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .radio-options label {
+            font-weight: normal;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Custom dropdown (replaces native <select> so mobile doesn't need a "Done" tap) */
+        .custom-select {
+            position: relative;
+        }
+
+        .custom-select__trigger {
+            width: 100%;
+            text-align: left;
+            padding: 12px 14px;
+            font-size: 15px;
+            font-family: inherit;
+            border: 1px solid #cccccc;
+            border-radius: 8px;
+            background-color: #ffffff;
+            cursor: pointer;
+            position: relative;
+            color: #888888;
+        }
+
+        .custom-select__trigger.has-value {
+            color: #1a1a1a;
+        }
+
+        .custom-select__trigger::after {
+            content: "▾";
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666666;
+        }
+
+        .custom-select__panel {
+            display: none;
+            position: absolute;
+            top: calc(100% + 4px);
+            left: 0;
+            right: 0;
+            max-height: 240px;
+            overflow-y: auto;
+            background-color: #ffffff;
+            border: 1px solid #cccccc;
+            border-radius: 8px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+            z-index: 20;
+        }
+
+        .custom-select.is-open .custom-select__panel {
+            display: block;
+        }
+
+        .custom-select__option {
+            padding: 12px 14px;
+            font-size: 15px;
+            cursor: pointer;
+        }
+
+        .custom-select__option:hover,
+        .custom-select__option:active {
+            background-color: #f7f7f7;
+        }
+
+        .custom-select__option.is-selected {
+            background-color: #fdeaea;
+            color: #990000;
+            font-weight: bold;
+        }
+
+        /* ==========================================================
+           FAQ ACCORDION
+           ========================================================== */
+        .faq-item {
+            border-bottom: 1px solid #e2e2e2;
+        }
+
+        .faq-item__q {
+            width: 100%;
+            text-align: left;
+            background: none;
+            border: none;
+            font-size: 16px;
+            font-weight: bold;
+            padding: 18px 30px 18px 0;
+            cursor: pointer;
+            position: relative;
+            color: #000000;
+        }
+
+        .faq-item__q::after {
+            content: "+";
+            position: absolute;
+            right: 0;
+            top: 18px;
+            font-size: 20px;
+            color: #990000;
+            transition: transform 0.2s ease;
+        }
+
+        .faq-item.is-open .faq-item__q::after {
+            content: "−";
+        }
+
+        .faq-item__a {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.25s ease;
+        }
+
+        .faq-item__a-inner {
+            padding-bottom: 18px;
+        }
+
+        .faq-item__a-inner p {
+            font-size: 15px;
+            color: #444444;
+            margin: 0;
+        }
+
+        /* ==========================================================
+           MISC
+           ========================================================== */
+        .divider {
+            border: none;
+            border-top: 1px solid #eeeeee;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .sticky-bar {
+            position: sticky;
+            bottom: 0;
+            background-color: #000000;
+            color: #ffffff;
+            text-align: center;
+            font-size: 13px;
+            font-weight: bold;
+            padding: 12px 16px;
+        }
+
+        .site-footer {
+            text-align: center;
+            font-size: 12px;
+            color: #777777;
+            padding: 25px 20px 0 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        footer {
+            background-color: #000000;
+            color: #ffffff;
+            text-align: center;
+            padding: 30px 20px;
+            font-size: 13px;
+            line-height: 1.6;
+            margin-top: 30px;
+        }
+
+        footer p { margin: 5px 0; }
+
+        @media (max-width: 600px) {
+            .headline { font-size: 24px; }
+            .sub-headline { font-size: 24px; }
+            .section h2 { font-size: 22px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Main Content Section -->
+    <div class="content-container">
+        <h1 class="headline">
+            Advanced & <span class="highlight-red">Performance Solution</span> For Men
+        </h1>
+
+        <p class="offer-text">
+            Buy 3 Packs Of Performance Coffee Capsules, Get 1 Pack For Free + Free Delivery
+        </p>
+
+        <img src="assets/PixelLab.Studio-1789316337534.png" alt="Performance coffee capsules" class="image-placeholder">
+
+        <p class="sub-headline">
+            This Is What A 6-7 Inch Looks Like At Full Erection (the size your woman craves)👇
+        </p>
+
+        <img src="https://d1yei2z3i6k35z.cloudfront.net/5399632/69c6e63d6a8d52.77503870_67d23bc27b7ab_65ef77e83f3e3_3rHy2Bf-1.png" alt="Size comparison" class="secondary-image">
+
+        <p class="sub-headline">
+            And This Is What A 2.5 - 3 Inch Penis Looks Like At Full Erection (probably the size you are having currently under your legs).👇
+        </p>
+
+        <img src="https://d1yei2z3i6k35z.cloudfront.net/5399632/69c6e6d30da876.51838918_67d23c1442ce5_65f0368385c21_WhatsAppImage2024-03-11at23.59.23_97dcc7f5.jpg" alt="Size comparison" class="secondary-image">
+
+        <div class="video-wrapper">
+            <iframe src="https://www.youtube.com/embed/0N9k6P9QTk4?autoplay=1&mute=1&playsinline=1&loop=1&playlist=0N9k6P9QTk4" title="Product video" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        </div>
+
+        <p class="big-red-heading">
+            THE NATURAL & SAFE WAY TO INCREASE YOUR PENIS SIZE & LAST LONGER IN BED WITH ROCK-HARD ERECTION👇
+        </p>
+
+        <img src="assets/PixelLab.Studio-1789329182817.jpeg" alt="Natural and safe way to increase" class="secondary-image">
+
+        <div class="button-group">
+            <a href="#form" class="btn btn-red">Claim This Offer Now</a>
+        </div>
+    </div>
+
+    <!-- WHY IT WORKS -->
+    <div class="wrap section">
+        <h2 class="center">Why Performax Coffee Works for Men Like You</h2>
+        <p>In today's world, stress, fatigue, and poor lifestyle choices can leave you feeling less than your best. It's easy to become overwhelmed, distracted, or run down. Performax Coffee changes that — it's designed specifically for men who want to feel energized, focused, and more confident than ever before.</p>
+
+        <div class="panel">
+            <p><strong>Reignite Your Performance in Bed:</strong> If you've been feeling a dip in your libido, energy, or sexual performance, you're not alone. Performax Coffee brings back that natural spark, with ingredients that promote healthy circulation, boost stamina, and enhance libido. No more disappointment — feel confident, powerful, and ready to give your partner the best experience.</p>
+        </div>
+        <div class="panel">
+            <p><strong>Elevate Your Focus and Clarity:</strong> Mental fatigue doesn't just affect your energy, it impacts your ability to perform. Performax Coffee provides a clear mind and unwavering focus. No more brain fog, no more fatigue — just pure, unfiltered focus and drive.</p>
+        </div>
+        <p class="center" style="margin-top:20px;">Performax Coffee is the secret weapon that helps you become the man you were always meant to be: confident, energized, and in control — in the bedroom and beyond.</p>
+    </div>
+
+    <!-- WHAT MAKES IT DIFFERENT -->
+    <div class="wrap section">
+        <h2 class="center">What Makes Performax Coffee Different?</h2>
+        <p class="center">Performax Coffee is crafted with the highest-quality ingredients known to support men's health, vitality, and performance. This isn't just caffeine in a cup — it's a carefully designed blend that works with your body to increase blood flow, boost testosterone, increase sexual vitality, and enhance brain function.</p>
+
+        <div class="panel">
+            <h3>What's Inside Performax Coffee?</h3>
+            <ul>
+                <li><strong>Instant Coffee</strong> — 15.0% · a rich, smooth base to kickstart your day with energy</li>
+                <li><strong>Non-Dairy Creamer</strong> — 65.0% · adds a creamy texture without the dairy</li>
+                <li><strong>Epimedium (Horny Goat Weed)</strong> — 5.0% · enhances libido, stamina, and overall vitality</li>
+                <li><strong>Tribulus Terrestris</strong> — 5.0% · supports testosterone production and physical endurance</li>
+                <li><strong>Tongkat Ali</strong> — 2.5% · boosts energy, strength, and sexual health</li>
+                <li><strong>Korean Ginseng</strong> — 2.5% · enhances mental clarity, boosts energy, reduces fatigue</li>
+                <li><strong>Maca</strong> — 2.5% · increases energy levels and sexual performance</li>
+                <li><strong>Ginkgo Biloba</strong> — 2.5% · improves circulation, mental clarity, and cognitive function</li>
+            </ul>
+        </div>
+
+        <div class="video-wrap video-wrap--square">
+            <iframe src="https://www.youtube.com/embed/W_-5FcEaU1I" title="Performax Coffee" allowfullscreen></iframe>
+        </div>
+
+        <div class="center" style="margin-top:10px;">
+            <a href="#form" class="btn btn-red">I Want It Now</a>
+        </div>
+    </div>
+
+    <!-- MORE IN THE BEDROOM -->
+    <div class="wrap section">
+        <div class="two-col">
+            <img src="https://normacare.com.ng/wp-content/uploads/2026/04/tmpv2nvtx7o.webp" alt="Performax Coffee bedroom confidence" />
+            <div>
+                <h2>Experience More in the Bedroom</h2>
+                <p>How would it feel to walk into the bedroom with confidence, knowing that you have the energy and stamina to go the distance? With Performax Coffee, you'll notice:</p>
+                <ul>
+                    <li><strong>Improved circulation</strong> — more blood flow equals better performance and satisfaction for both you and your partner.</li>
+                    <li><strong>Increased libido</strong> — rediscover your desire and reignite the passion that makes you feel more alive than ever.</li>
+                    <li><strong>Longer-lasting energy</strong> — get through those late nights with the energy to spare, feeling vital, charged, and ready.</li>
+                </ul>
+                <p>We all know life can get in the way — stress, work, everyday demands take their toll on your sexual energy. But with Performax Coffee, you have a natural, reliable way to boost your confidence and get back to enjoying life's intimate moments with full vigor.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- MENTAL FOCUS -->
+    <div class="wrap section">
+        <h2 class="center">Boost Your Brain, Boost Your Bedroom Confidence</h2>
+        <p class="center">Let's talk about mental clarity. You want to stay sharp, not just in the office, but in the bedroom as well. Performax Coffee isn't just about physical energy — it's about mental sharpness, clarity, and total confidence.</p>
+
+        <div class="two-col">
+            <img src="https://normacare.com.ng/wp-content/uploads/2026/04/tmphuixldc7-1.webp" alt="Performax Coffee mental focus" />
+            <div>
+                <div class="feature-row">
+                    <div class="feature-row__icon">✓</div>
+                    <div><strong>Enhanced Focus</strong><p class="mb-0">When your mind is sharp, your performance improves across the board — in a meeting, during a workout, or in intimate moments.</p></div>
+                </div>
+                <div class="feature-row">
+                    <div class="feature-row__icon">✓</div>
+                    <div><strong>Increased Memory</strong><p class="mb-0">Feel sharper, quicker, and more mentally agile, ready to conquer any challenge.</p></div>
+                </div>
+                <div class="feature-row">
+                    <div class="feature-row__icon">✓</div>
+                    <div><strong>Better Mental Stamina</strong><p class="mb-0">Performax gives you the clarity and focus to get through the day and still be ready for more when the time comes.</p></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="stats">
+            <div><div class="stats__num">7,145+</div><div class="stats__label">Trust Performax</div></div>
+            <div><div class="stats__num">19.8k+</div><div class="stats__label">Sold So Far</div></div>
+            <div><div class="stats__num">34</div><div class="stats__label">States In Nigeria</div></div>
+            <div><div class="stats__num">5</div><div class="stats__label">Countries Globally</div></div>
+        </div>
+
+        <div class="center">
+            <p class="lede"><strong>Ready to Perform Better?</strong></p>
+            <a href="#form" class="btn btn-red">Get It Now</a>
+        </div>
+
+        <div class="video-wrap video-wrap--square" style="margin-top:24px;">
+            <iframe src="https://www.youtube.com/embed/0N9k6P9QTk4" title="Performax Coffee testimonials" allowfullscreen></iframe>
+        </div>
+    </div>
+
+    <!-- TESTIMONIAL -->
+    <div class="wrap section">
+        <h2 class="center">What Our Customers Are Saying</h2>
+        <div class="testimonial-card">
+            <img src="assets/a1e45915-b773-489c-af5f-72f8fbb2f4e8.png" alt="Customer testimonial" class="testimonial-card__image">
+            <div class="testimonial-card__body">
+                <p>I used to feel embarrassed about my size, and my wife would often complain that I wasn't satisfying her in bed.</p>
+                <p>I started using SuperViga Erection Capsules 3 weeks ago, my performance has improved greatly, I can last up to 30 minutes now and I've gained over an inch so far,</p>
+                <p>One thing I love about SuperViga Erection Capsules is that it works really fast...</p>
+                <div class="testimonial-card__stars">★★★★★</div>
+                <div class="testimonial-card__name">Engr Bayo from Abuja</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PRICING -->
+    <div class="wrap section" id="pricing">
+        <h2 class="center">Pricing</h2>
+        <p class="center">Considering the premium ingredients, expert formulation, and top-notch care in every batch, Performax Coffee should be valued at <strong>₦44,250</strong>... but because we believe you deserve to experience your best self, we're offering it today at a discount — before it goes back to full price.</p>
+
+        <h2 class="center" style="margin-top:30px;">Choose Your Package</h2>
+        <div class="pricing-grid">
+            <div class="price-card">
+                <div class="price-card__badge">REGULAR OFFER</div>
+                <div class="price-card__desc">1 Pack (33% OFF)</div>
+                <div class="price-card__old">₦54,250</div>
+                <div class="price-card__now">₦39,500</div>
+                <img src="https://normacare.com.ng/wp-content/uploads/2026/04/tmp4f_89n9u.webp" alt="Performax 1 pack" />
+                <ul>
+                    <li>One discounted pack</li>
+                    <li>Free discreet door-step delivery</li>
+                    <li>Payment on delivery</li>
+                    <li>100% money-back guarantee</li>
+                    <li>Lasts 5 weeks (10 sachets)</li>
+                </ul>
+                <button class="btn btn-black btn--block" data-select-package="REGULAR OFFER (1 Pack = ₦39,500)">Order Now</button>
+            </div>
+
+            <div class="price-card price-card--featured">
+                <div class="price-card__badge">DOUBLE DEAL</div>
+                <div class="price-card__desc">2 Packs with a Discount</div>
+                <div class="price-card__old">₦98,500</div>
+                <div class="price-card__now">₦59,000</div>
+                <img src="https://normacare.com.ng/wp-content/uploads/2026/04/tmp4f_89n9u.webp" alt="Performax 2 packs" />
+                <ul>
+                    <li>Plus ₦5,000 discount</li>
+                    <li>Free discreet door-step delivery</li>
+                    <li>Payment on delivery</li>
+                    <li>100% money-back guarantee</li>
+                    <li>Lasts 2 months 2 weeks</li>
+                </ul>
+                <button class="btn btn-red btn--block" data-select-package="DOUBLE DEAL (2 Packs = ₦59,000)">Order Now</button>
+            </div>
+
+            <div class="price-card">
+                <div class="price-card__badge">MEGA SAVER</div>
+                <div class="price-card__desc">Buy 3, Get 1 Free</div>
+                <div class="price-card__old">₦142,750</div>
+                <div class="price-card__now">₦92,500</div>
+                <img src="https://normacare.com.ng/wp-content/uploads/2026/04/tmp4f_89n9u.webp" alt="Performax 4 packs" />
+                <ul>
+                    <li>Buy 3, get 1 free</li>
+                    <li>Free discreet door-step delivery</li>
+                    <li>Payment on delivery</li>
+                    <li>100% money-back guarantee</li>
+                    <li>Lasts 2 months 2 weeks</li>
+                </ul>
+                <button class="btn btn-black btn--block" data-select-package="MEGA SAVER (3 Packs + 1 = ₦92,500)">Order Now</button>
+            </div>
+        </div>
+
+        <p class="center" style="margin-top:24px;"><strong>Limited stock available. This page will vanish soon.</strong></p>
+        <p class="center">Act fast — time is running out! If you wait too long, you might come back to find that Performax Coffee is out of stock and unavailable. Don't miss your chance to experience the ultimate performance boost. Take action now and secure your order before it's too late!</p>
+    </div>
+
+    <!-- GUARANTEE -->
+    <div class="wrap section">
+        <div class="two-col">
+            <img src="https://normacare.com.ng/wp-content/uploads/2026/04/tmpzju1f7sl.webp" alt="Performax money back guarantee" />
+            <div>
+                <p class="eyebrow">IF IT DOES NOT WORK FOR YOU</p>
+                <h2>100% Money Back Guarantee</h2>
+                <p><strong>We stand behind our product with absolute confidence!</strong> That's how sure we are that Performax Coffee will deliver the results you've been looking for.</p>
+                <p>If for any reason you're not fully satisfied, we'll gladly refund your money. In fact, we'll even let you keep the product. No stress, no hassle — just complete satisfaction.</p>
+            </div>
+        </div>
+    </div>
+
+    <hr class="divider" />
+
+    <!-- ORDER FORM -->
+    <div class="wrap section" id="form">
+        <h2 class="center">Fill Out This Form and Get Your Pack(s) Delivered to Your Doorstep Within 48 Hours for Free</h2>
+        <div class="form-card">
+            <form id="order-form">
+                <input type="hidden" name="access_key" value="cafa519c-8f9f-44ea-b344-64e87f72bd61">
+                <input type="hidden" name="subject" value="New Performax Coffee Order">
+                <div class="field">
+                    <label for="name">Full Name</label>
+                    <input type="text" id="name" name="name" required />
+                </div>
+                <div class="field">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone" name="phone" inputmode="numeric" pattern="[0-9]{11}" maxlength="11" title="Enter an 11-digit phone number" required />
+                </div>
+                <div class="field">
+                    <label for="whatsapp">WhatsApp Number</label>
+                    <input type="tel" id="whatsapp" name="whatsapp" />
+                </div>
+                <div class="field">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" />
+                </div>
+                <div class="field">
+                    <label for="address">Delivery Address</label>
+                    <textarea id="address" name="address" required></textarea>
+                </div>
+                <div class="field">
+                    <label for="state">Delivery State</label>
+                    <div class="custom-select" data-name="state" data-required="true">
+                        <button type="button" class="custom-select__trigger">Select your state</button>
+                        <input type="hidden" name="state" required>
+                        <div class="custom-select__panel">
+                            <div class="custom-select__option">Abia</div>
+                            <div class="custom-select__option">Adamawa</div>
+                            <div class="custom-select__option">Akwa Ibom</div>
+                            <div class="custom-select__option">Anambra</div>
+                            <div class="custom-select__option">Bauchi</div>
+                            <div class="custom-select__option">Bayelsa</div>
+                            <div class="custom-select__option">Benue</div>
+                            <div class="custom-select__option">Borno</div>
+                            <div class="custom-select__option">Cross River</div>
+                            <div class="custom-select__option">Delta</div>
+                            <div class="custom-select__option">Ebonyi</div>
+                            <div class="custom-select__option">Edo</div>
+                            <div class="custom-select__option">Ekiti</div>
+                            <div class="custom-select__option">Enugu</div>
+                            <div class="custom-select__option">Gombe</div>
+                            <div class="custom-select__option">Imo</div>
+                            <div class="custom-select__option">Jigawa</div>
+                            <div class="custom-select__option">Kaduna</div>
+                            <div class="custom-select__option">Kano</div>
+                            <div class="custom-select__option">Katsina</div>
+                            <div class="custom-select__option">Kebbi</div>
+                            <div class="custom-select__option">Kogi</div>
+                            <div class="custom-select__option">Kwara</div>
+                            <div class="custom-select__option">Lagos</div>
+                            <div class="custom-select__option">Nasarawa</div>
+                            <div class="custom-select__option">Niger</div>
+                            <div class="custom-select__option">Ogun</div>
+                            <div class="custom-select__option">Ondo</div>
+                            <div class="custom-select__option">Osun</div>
+                            <div class="custom-select__option">Oyo</div>
+                            <div class="custom-select__option">Plateau</div>
+                            <div class="custom-select__option">Rivers</div>
+                            <div class="custom-select__option">Sokoto</div>
+                            <div class="custom-select__option">Taraba</div>
+                            <div class="custom-select__option">Yobe</div>
+                            <div class="custom-select__option">Zamfara</div>
+                            <div class="custom-select__option">FCT (Abuja)</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="field">
+                    <label for="gender">Gender</label>
+                    <div class="custom-select" data-name="gender">
+                        <button type="button" class="custom-select__trigger">Select gender</button>
+                        <input type="hidden" name="gender">
+                        <div class="custom-select__panel">
+                            <div class="custom-select__option">Male</div>
+                            <div class="custom-select__option">Female</div>
+                            <div class="custom-select__option">Prefer not to say</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="field">
+                    <label>Choose Your Package</label>
+                    <div class="radio-options">
+                        <label><input type="radio" name="package" value="REGULAR OFFER (1 Pack = ₦39,500)" required /> REGULAR OFFER — 1 Pack = ₦39,500</label>
+                        <label><input type="radio" name="package" value="DOUBLE DEAL (2 Packs = ₦59,000)" required /> DOUBLE DEAL — 2 Packs = ₦59,000</label>
+                        <label><input type="radio" name="package" value="MEGA SAVER (3 Packs + 1 = ₦92,500)" required /> MEGA SAVER — 3 Packs + 1 = ₦92,500</label>
+                    </div>
+                </div>
+                <div class="field">
+                    <label>When Do You Want It Delivered?</label>
+                    <div class="radio-options">
+                        <label><input type="radio" name="delivery-timing" value="Today" required /> Today</label>
+                        <label><input type="radio" name="delivery-timing" value="Tomorrow" required /> Tomorrow</label>
+                        <label><input type="radio" name="delivery-timing" value="Specify a date" id="delivery-specific-radio" required /> Specify a date</label>
+                    </div>
+                    <div id="specific-date-wrap" style="display:none; margin-top:12px;">
+                        <label for="specific-date">Choose the date</label>
+                        <input type="date" id="specific-date" name="specific-date" />
+                    </div>
+                </div>
+                <div class="field">
+                    <label for="delivery-note">Delivery Note</label>
+                    <textarea id="delivery-note" name="delivery-note" placeholder="Any special instructions for delivery"></textarea>
+                </div>
+                <button type="submit" class="btn btn-red btn--block">Submit My Order</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- FAQ -->
+    <div class="wrap section">
+        <p class="center eyebrow">STILL NOT SURE?</p>
+        <h2 class="center">Frequently Asked Questions</h2>
+
+        <div class="faq-item">
+            <button class="faq-item__q">When will I start seeing results?</button>
+            <div class="faq-item__a"><div class="faq-item__a-inner">
+                <p>Great question! While everyone's body is unique, many of our customers report feeling an improvement in their energy, focus, and performance within just a few hours of using Performax Coffee. For more lasting results, we recommend consistent use for 2–3 weeks. And don't forget, we offer a 100% money-back guarantee — so you have nothing to lose, and everything to gain.</p>
+            </div></div>
+        </div>
+
+        <div class="faq-item">
+            <button class="faq-item__q">How many days does it take to receive orders?</button>
+            <div class="faq-item__a"><div class="faq-item__a-inner">
+                <p>Once your order is confirmed, we typically process and ship it within 1–2 days. Delivery times can vary depending on your location, but you can expect to receive your Performax Coffee in 2 to 4 days, with a unique tracking code.</p>
+            </div></div>
+        </div>
+
+        <div class="faq-item">
+            <button class="faq-item__q">How safe is Performax Coffee?</button>
+            <div class="faq-item__a"><div class="faq-item__a-inner">
+                <p>Performax Coffee is crafted from natural, plant-based ingredients like Korean ginseng and maca root. It contains only the ingredients listed on the label, ensuring transparency and safety, and is registered with NAFDAC, which involves rigorous testing and evaluation. As with any supplement, individual reactions can vary — consult a healthcare professional if you have underlying health conditions.</p>
+            </div></div>
+        </div>
+
+        <div class="faq-item">
+            <button class="faq-item__q">What if it does not work for me?</button>
+            <div class="faq-item__a"><div class="faq-item__a-inner">
+                <p>We understand that every body is different, and results can vary. That's why we offer a 100% money-back guarantee — if it doesn't work for you, reach out to us and we'll gladly refund your money, and you can even keep the product. No hard feelings.</p>
+            </div></div>
+        </div>
+
+        <div class="center" style="margin-top:30px;">
+            <a href="#form" class="btn btn-red">Get It Now</a>
+        </div>
+    </div>
+
+    <div class="sticky-bar">FREE Delivery. Pay on Delivery. Money Back Guarantee</div>
+
+    <div class="site-footer">
+        Performax Coffee for Men — NAFDAC-approved. Individual results may vary. This coffee is a dietary supplement and not a substitute for professional medical advice.
+    </div>
+
+    <!-- Footer Section -->
+    <footer>
+        <p>Copyright &copy; 2026. TSH HERBAL</p>
+        <p>This site is not a part of Facebook website or Facebook Inc.</p>
+    </footer>
+
+    <script>
+        // FAQ accordion toggle
+        document.querySelectorAll('.faq-item').forEach(function (item) {
+            var question = item.querySelector('.faq-item__q');
+            var answer = item.querySelector('.faq-item__a');
+            question.addEventListener('click', function () {
+                var isOpen = item.classList.contains('is-open');
+                document.querySelectorAll('.faq-item').forEach(function (i) {
+                    i.classList.remove('is-open');
+                    i.querySelector('.faq-item__a').style.maxHeight = null;
+                });
+                if (!isOpen) {
+                    item.classList.add('is-open');
+                    answer.style.maxHeight = answer.scrollHeight + 'px';
+                }
+            });
+        });
+
+        // Show the date picker only when "Specify a date" is chosen
+        var dateWrap = document.getElementById('specific-date-wrap');
+        document.querySelectorAll('input[name="delivery-timing"]').forEach(function (radio) {
+            radio.addEventListener('change', function () {
+                dateWrap.style.display = (this.id === 'delivery-specific-radio') ? 'block' : 'none';
+            });
+        });
+
+        // Pricing card buttons auto-select the matching package radio in the form,
+        // then scroll the user down to the order form
+        document.querySelectorAll('[data-select-package]').forEach(function (button) {
+            button.addEventListener('click', function () {
+                var value = this.getAttribute('data-select-package');
+                var radio = document.querySelector('input[name="package"][value="' + value + '"]');
+                if (radio) radio.checked = true;
+                document.getElementById('form').scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+
+        // Custom dropdown: tap to open, tap an option to select and close immediately
+        document.querySelectorAll('.custom-select').forEach(function (dropdown) {
+            var trigger = dropdown.querySelector('.custom-select__trigger');
+            var hiddenInput = dropdown.querySelector('input[type="hidden"]');
+            var options = dropdown.querySelectorAll('.custom-select__option');
+
+            trigger.addEventListener('click', function (e) {
+                e.stopPropagation();
+                document.querySelectorAll('.custom-select.is-open').forEach(function (open) {
+                    if (open !== dropdown) open.classList.remove('is-open');
+                });
+                dropdown.classList.toggle('is-open');
+            });
+
+            options.forEach(function (option) {
+                option.addEventListener('click', function () {
+                    hiddenInput.value = option.textContent.trim();
+                    trigger.textContent = option.textContent.trim();
+                    trigger.classList.add('has-value');
+                    options.forEach(function (o) { o.classList.remove('is-selected'); });
+                    option.classList.add('is-selected');
+                    dropdown.classList.remove('is-open');
+                });
+            });
+        });
+
+        // Close any open custom dropdown when tapping elsewhere on the page
+        document.addEventListener('click', function () {
+            document.querySelectorAll('.custom-select.is-open').forEach(function (open) {
+                open.classList.remove('is-open');
+            });
+        });
+
+        // Cart abandonment tracking: if Name, Phone, State and Address are all
+        // filled in but the visitor leaves without submitting, send what they
+        // entered to Web3Forms as a separate "Cart Abandonment" lead
+        var orderForm = document.getElementById('order-form');
+        var formSubmitted = false;
+        var abandonmentSent = false;
+
+        function maybeSendAbandonedCart() {
+            if (formSubmitted || abandonmentSent) return;
+
+            var name = orderForm.querySelector('#name').value.trim();
+            var phone = orderForm.querySelector('#phone').value.trim();
+            var address = orderForm.querySelector('#address').value.trim();
+            var stateDropdown = orderForm.querySelector('.custom-select[data-name="state"] input[type="hidden"]');
+            var state = stateDropdown ? stateDropdown.value : '';
+
+            if (!name || !phone || !address || !state) return;
+
+            var abandonData = new FormData();
+            abandonData.append('access_key', 'cafa519c-8f9f-44ea-b344-64e87f72bd61');
+            abandonData.append('subject', 'Cart Abandonment - Performax Coffee');
+            abandonData.append('name', name);
+            abandonData.append('phone', phone);
+            abandonData.append('address', address);
+            abandonData.append('state', state);
+
+            // sendBeacon fires reliably even as the page is closing/unloading,
+            // unlike a normal fetch which can get cancelled mid-flight
+            if (navigator.sendBeacon) {
+                navigator.sendBeacon('https://api.web3forms.com/submit', abandonData);
+            } else {
+                fetch('https://api.web3forms.com/submit', { method: 'POST', body: abandonData, keepalive: true });
+            }
+            abandonmentSent = true;
+        }
+
+        window.addEventListener('beforeunload', maybeSendAbandonedCart);
+        document.addEventListener('visibilitychange', function () {
+            if (document.visibilityState === 'hidden') maybeSendAbandonedCart();
+        });
+
+        // After the order form is submitted: validate, send to Web3Forms, then redirect
+        orderForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            // Check the required custom dropdown(s) since hidden inputs don't
+            // always trigger the browser's built-in validation reliably
+            var missing = [];
+            document.querySelectorAll('.custom-select[data-required="true"]').forEach(function (dropdown) {
+                var hiddenInput = dropdown.querySelector('input[type="hidden"]');
+                if (!hiddenInput.value) missing.push(dropdown);
+            });
+
+            if (missing.length > 0) {
+                missing[0].querySelector('.custom-select__trigger').focus();
+                missing[0].querySelector('.custom-select__trigger').style.borderColor = '#cc0000';
+                return;
+            }
+
+            var submitBtn = orderForm.querySelector('button[type="submit"]');
+            var originalText = submitBtn.textContent;
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting...';
+
+            var formData = new FormData(orderForm);
+
+            fetch('https://api.web3forms.com/submit', {
+                method: 'POST',
+                headers: { 'Accept': 'application/json' },
+                body: formData
+            })
+            .then(function (response) { return response.json(); })
+            .then(function (result) {
+                if (result.success) {
+                    formSubmitted = true;
+                    window.location.href = 'thank-you.html';
+                } else {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = originalText;
+                    alert('Something went wrong sending your order. Please try again.');
+                }
+            })
+            .catch(function () {
+                submitBtn.disabled = false;
+                submitBtn.textContent = originalText;
+                alert('Something went wrong sending your order. Please check your connection and try again.');
+            });
+        });
+    </script>
+
+</body>
+</html>
